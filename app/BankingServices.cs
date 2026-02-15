@@ -1,26 +1,45 @@
-namespace ATMApp.Services
+using System;
+
+// BUSINESS LOGIC
+public class BankingService
 {
-    public static class BankingServices
+    private double lastTransactionAmount = 0.0;
+
+    // Pass-by-value
+    public double CheckBalance(double balance)
     {
-        // Option 1: Pass-by-value
-        public static double GetBalance(double balance)
+        return balance;
+    }
+
+    // ref
+    public bool Deposit(ref double balance, double amount)
+    {
+        if (amount <= 0)
+            return false;
+
+        balance += amount;
+        lastTransactionAmount = amount;
+        return true;
+    }
+
+    // ref + out
+    public void Withdraw(ref double balance, double amount, out bool success)
+    {
+        if (amount <= 0 || amount > balance)
         {
-            return balance;
+            success = false;
+            return;
         }
 
-        // Option 2: ref (Deposit)
-        public static bool Deposit(ref double balance, double amount)
-        {
-            return false; //placeholder return value, replace with actual implementation
-        }
+        balance -= amount;
+        lastTransactionAmount = amount;
+        success = true;
+    }
 
-        // Option 3: ref + out (Withdraw)
-        public static void Withdraw(
-            ref double balance,
-            double amount,
-            out bool isSuccessful)
-        {
-            isSuccessful = false; //placeholder value, replace with actual implementation
-        }
+    // Pass-by-value
+    public void GetMiniStatement(double balance, out double currentBalance, out double lastTransaction)
+    {
+        currentBalance = balance;
+        lastTransaction = lastTransactionAmount;
     }
 }
